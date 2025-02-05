@@ -1,16 +1,11 @@
 <template>
   <div>
-    <h2>Project Details</h2>
-
-    <div v-if="projects.length">
-      <h4>Select Task:</h4>
+    <div class="mb-4" v-if="projects.length">
         <select v-model="selectedTask" class="form-select" >
         <option v-for="project in projects" :key="project.id" :value="project.id">
           {{ project.name }}
         </option>
       </select>
-
-      <p v-if="selectedTask">Selected Task ID: {{ selectedTask }}</p>
     </div>
         <TaskListComponent :projectId="selectedTask"></TaskListComponent>
   </div>

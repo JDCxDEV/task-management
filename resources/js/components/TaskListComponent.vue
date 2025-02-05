@@ -1,19 +1,28 @@
 <template>
   <div>
-    <draggable 
-      @start="drag=true" 
-      @end="handleDragEnd"
-      v-model="tasks" 
-      tag="div" 
-      class="task-list"
-      >
-      <template #item="{ element }">
-        <div class="task-item">
-          <div>{{ element.name }}</div>
-          <div>Priority: {{ element.priority }}</div>
-        </div>
-      </template>
-    </draggable>
+    <table class="table task-table">
+      <thead>
+        <tr>
+          <th scope="col">Task Name</th>
+          <th scope="col">Priority</th>
+        </tr>
+      </thead>
+        <draggable
+          @start="drag = true"
+          @end="handleDragEnd"
+          v-model="tasks"
+          tag="tbody"
+          :element="'tr'"
+          :options="{ animation: 150 }"
+        >
+          <template #item="{ element, index }">
+            <tr >
+              <td>{{ element.name }}</td>
+              <td>{{ index + 1 }}</td>
+            </tr>
+          </template>
+        </draggable>
+    </table>
   </div>
 </template>
 
@@ -35,7 +44,7 @@ export default {
   },
   setup(props) {
     const tasks = ref([]);
-       const drag = ref(false);
+    const drag = ref(false);
 
     const fetchTasks = async () => {
       if (props.projectId) {
@@ -49,9 +58,7 @@ export default {
     };
 
     const handleDragEnd = async () => {
-      // Logic to update task order after drag and drop
       try {
-        // Assuming you have an API endpoint to update task order
         const response = await axios.put(`/projects/${props.projectId}/tasks/order`, { tasks: tasks.value });
         if (!response.ok) {
           throw new Error('Failed to update task order');
@@ -74,17 +81,24 @@ export default {
 </script>
 
 <style scoped>
-.task-list {
+.task-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.task-table th,
+.task-table td {
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.task-table th {
+  background-color: #f0f0f0;
 }
 
 .task-item {
-  background-color: #f0f0f0;
-  padding: 10px;
-  margin-bottom: 5px;
-  border: 1px solid #ddd;
-  border-radius: 3px;
+  cursor: move;
 }
 </style>
