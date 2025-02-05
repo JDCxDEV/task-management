@@ -27,7 +27,9 @@ class ProjectController extends Controller
     {
         $projects = Project::all();
 
-        return view('projects.index', compact('projects'));
+        return response()->json([
+            'projects' => $projects
+        ]);
     }
 
     /**
@@ -126,5 +128,37 @@ class ProjectController extends Controller
 
         return redirect()->route('projects.show', $projectId)
             ->with('success', 'Task attached successfully.');
+    }
+
+    /**
+     * Fetch tasks belonging to a specific project.
+     *
+     * @param  \App\Models\Project  $project
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tasks(Project $project)
+    {
+        $tasks = $project->tasks()->orderBy('priority')->get();
+        return response()->json([
+            'tasks' => $tasks
+        ]);
+    }
+
+
+    public function updateTaskOrder($projectId, Request $request)
+    {
+        $request->validate([
+            'tasks' => 'required|array',
+        ]);
+
+        $tasks = $request->input('tasks');
+
+        $project = Project::findOrFail($projectId);
+
+        foreach ($tasks as $index => $taskData) {
+            $project->tasks()->where('id', $taskData['id'])->update(['priority' => $index]);
+        }
+
+        return response()->json(['message' => 'Task order updated successfully']);
     }
 }
