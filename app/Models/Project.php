@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Model;
 
-class Project extends Authenticatable
+class Project extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -14,10 +15,10 @@ class Project extends Authenticatable
     /**
      * Define a many-to-many relationship between projects and tasks.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\hasMany
      */
     public function tasks()
     {
-        return $this->belongsToMany(Task::class);
+        return $this->hasMany(Task::class);
     }
 }
