@@ -9,12 +9,12 @@ Route::middleware(['auth'])->group(function () {
     
     // Tasks Routes
     
-    Route::get('/tasks', [TaskController::class, 'index'])->name('task.index');
-    Route::get('/tasks/create', [TaskController::class, 'create'])->name('task.create');
-    Route::post('/tasks', [TaskController::class, 'store'])->name('task.store');
-    Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])->name('task.edit');
-    Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('task.update');
-    Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('task.destroy');
+    Route::get('/tasks', [TaskController::class, 'index'])->name('project.index');
+    Route::post('/tasks', [TaskController::class, 'store'])->name('project.store');
+    Route::post('/tasks/{id}/view', [TaskController::class, 'view'])->name('project.view');
+    Route::put('/tasks/{project}/update', [TaskController::class, 'update'])->name('project.update');
+    Route::post('/tasks/{id}/archive', [TaskController::class, 'archive'])->name('project.archive');
+    Route::post('/tasks/{id}/restore', [TaskController::class, 'restore'])->name('project.restore');
 
     // Projects Routes
     

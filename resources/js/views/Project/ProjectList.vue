@@ -1,5 +1,5 @@
 <template>
-  <div>
+ <div>
     <div class="mb-4" v-if="projects.length">
 		<div class="row">
 			<div class="col-9">
@@ -10,16 +10,28 @@
 				</select>
 			</div>
 			<div class="col-3">
-                <ProjectCreateOrEdit modalId="projectUpdate" :isEditing="true" :projectId="projectId" :viewUrl="project.viewUrl ? project.viewUrl : '' " iconClass="fas fa-cog"></ProjectCreateOrEdit>
-
-				<button class="btn btn-success float-end">
-                    Add New Task
-                </button>
+                <div class="row">
+                    <div class="col-4">
+                        <ProjectCreateOrEdit 
+                            modalId="projectUpdate" 
+                            :isEditing="true" 
+                            :projectId="projectId" 
+                            :viewUrl="project.viewUrl ? project.viewUrl : '' " 
+                            iconClass="fas fa-cog"
+                        />
+                    </div>
+                    <div class="col-8">      
+                        <TaskCreateOrEdit 
+                            modalId="taskCreate" 
+                            :projectId="projectId"
+                        />
+                    </div>
+                </div>
 			</div>
 		</div>
     </div>
-    <TaskListComponent :projectId="projectId"></TaskListComponent>
-  </div>
+    <TaskList :projectId="projectId"></TaskList>
+</div>
 </template>
 
 <script>
@@ -27,25 +39,25 @@ import { inject, ref, onMounted, watch } from 'vue';
 import axios from 'axios';
 
 import ProjectCreateOrEdit from '../Project/ProjectCreateOrEdit.vue';
-import TaskListComponent from '../Task/TaskList.vue';
+import TaskCreateOrEdit from '../Task/TaskCreateOrEdit.vue'; 
+import TaskList from '../Task/TaskList.vue';
 
 export default {
   name: 'ProjectList',
 
     components: {
+        TaskList,
         ProjectCreateOrEdit,
-        TaskListComponent,
+        TaskCreateOrEdit
     },
   
     setup() {
-        const projectId = ref(null);
+        const projectId = ref('');
         const project = ref({});
         const projects = ref([]);
 
         const emitter = inject('emitter');
 
-
-        // *Listen* for event create or update
         emitter.on('project-create-or-update', async (value) => {  
             if (value) {
                 await fetchProject(value);
@@ -61,7 +73,7 @@ export default {
                 projects.value = response.data.projects;
 
                 if (value == null) {
-                    projectId.value = projects.value ? projects.value[0].id : null;
+                    projectId.value = projects.value ? projects.value[0].id : '';
                 } else {
                     projectId.value = value;
                 }
@@ -88,9 +100,9 @@ export default {
         });
 
         return {
-            projects,
-            project,
             projectId,
+            project,
+            projects,
         };
     },
 };

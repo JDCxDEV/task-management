@@ -18,18 +18,6 @@ class TaskController extends Controller
     }
 
     /**
-     * Display a listing of the tasks.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $tasks = Task::all();
-
-        return view('tasks.index', compact('tasks'));
-    }
-
-    /**
      * Show the form for creating a new task.
      *
      * @return \Illuminate\Http\Response
@@ -51,7 +39,6 @@ class TaskController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'priority' => 'required|integer',
-            // Add validation rules for other attributes as needed
         ]);
 
         Task::create($request->all());
@@ -63,12 +50,18 @@ class TaskController extends Controller
     /**
      * Show the form for editing the specified task.
      *
-     * @param  \App\Models\Task  $task
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Task $task)
+    public function view($id)
     {
-        return view('tasks.edit', compact('task'));
+        $task = Task::findOrFail($id);
+
+        return response()->json([
+            'id' => $task->id,
+            'name' => $task->name,
+            'updateUrl' =>$task->renderUpdateUrl()   
+        ]);
     }
 
     /**
@@ -83,13 +76,9 @@ class TaskController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'priority' => 'required|integer',
-            // Add validation rules for other attributes as needed
         ]);
 
-        $task->update($request->all());
-
-        return redirect()->route('tasks.index')
-            ->with('success', 'Task updated successfully.');
+        return response()->json(['message' => 'Task updated successfully']);
     }
 
     /**

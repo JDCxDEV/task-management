@@ -15,23 +15,24 @@
           tag="tbody"
           :element="'tr'"
           :options="{ animation: 150 }"
+		  itemKey="id"
         >
-          <template #item="{ element, index }">
-            <tr class="task-item ">
-              	<td class="text-center">
-					{{ index + 1 }}
-				</td>
-              	<td>{{ element.name }}</td>
-				<td class="text-center">
-					<button class="btn btn-warning m-1 text-white">
-						<i class="fa-solid fa-pen-to-square"></i>
-					</button>
-					<button class="btn btn-danger">
-						<i class="fa-solid fa-trash"></i>
-					</button>
-				</td>
-            </tr>
-          </template>
+			<template #item="{ element, index }">
+				<tr class="task-item" >
+					<td class="text-center">
+						{{ index + 1 }}
+					</td>
+					<td>{{ element.name }}</td>
+					<td class="text-center">
+						<button class="btn btn-warning m-1 text-white">
+							<i class="fa-solid fa-pen-to-square"></i>
+						</button>
+						<button class="btn btn-danger">
+							<i class="fa-solid fa-trash"></i>
+						</button>
+					</td>
+				</tr>
+			</template>
         </draggable>
     </table>
   </div>
@@ -44,10 +45,9 @@ import draggable from 'vuedraggable';
 
 export default {
 	name: 'TaskList',
-	
+
 	props: {
 		projectId: {
-			type: String,
 			required: true,
 		},
 	},
@@ -73,10 +73,7 @@ export default {
 
     const reArrangeTaskOrder = async () => {
 		try {
-			const response = await axios.put(`/projects/${props.projectId}/tasks/order`, { tasks: tasks.value });
-				if (!response.ok) {
-				throw new Error('Failed to update task order');
-			}
+			await axios.put(`/projects/${props.projectId}/tasks/order`, { tasks: tasks.value });
 		} catch (error) {
 			console.error('Error updating task order:', error);
 		}
