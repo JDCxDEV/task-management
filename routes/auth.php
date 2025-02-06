@@ -6,22 +6,25 @@ use App\Http\Controllers\ProjectController;
 
 
 Route::middleware(['auth'])->group(function () {
+    
     // Tasks Routes
-    Route::resource('tasks', TaskController::class);
-    Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
-    Route::get('/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
-    Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
-    Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
-    Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
-    Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+    
+    Route::get('/tasks', [TaskController::class, 'index'])->name('task.index');
+    Route::get('/tasks/create', [TaskController::class, 'create'])->name('task.create');
+    Route::post('/tasks', [TaskController::class, 'store'])->name('task.store');
+    Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])->name('task.edit');
+    Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('task.update');
+    Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('task.destroy');
 
     // Projects Routes
-    Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
-    Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
-    Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
-    Route::get('/projects/{project}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
-    Route::put('/projects/{project}', [ProjectController::class, 'update'])->name('projects.update');
-    Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
-    Route::get('/projects/{project}/tasks', [ProjectController::class, 'tasks'])->name('projects.tasks');
-    Route::put('/projects/{projectId}/tasks/order', [ProjectController::class, 'updateTaskOrder'])->name('projects.task.order');
+    
+    Route::get('/projects', [ProjectController::class, 'index'])->name('project.index');
+    Route::get('/projects/create', [ProjectController::class, 'create'])->name('project.create');
+    Route::post('/projects', [ProjectController::class, 'store'])->name('project.store');
+    Route::get('/projects/{project}/edit', [ProjectController::class, 'edit'])->name('project.edit');
+    Route::put('/projects/{project}', [ProjectController::class, 'update'])->name('project.update');
+    Route::post('/projects/{id}/archive', [ProjectController::class, 'archive'])->name('project.archive');
+    Route::post('/projects/{id}/restore', [ProjectController::class, 'restore'])->name('project.restore');
+    Route::get('/projects/{project}/tasks', [ProjectController::class, 'tasks'])->name('project.tasks');
+    Route::put('/projects/{projectId}/tasks/order', [ProjectController::class, 'updateTaskOrder'])->name('project.task-order');
 });

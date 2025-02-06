@@ -19,8 +19,8 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                        <dashboard></dashboard>
- 
+                    
+                    <dashboard></dashboard>
                 </div>
             </div>
         </div>

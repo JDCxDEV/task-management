@@ -28,7 +28,7 @@ class ProjectController extends Controller
         $projects = Project::all();
 
         return response()->json([
-            'projects' => $projects
+            'projects' => $this->formatData($projects)
         ]);
     }
 
@@ -53,13 +53,11 @@ class ProjectController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            // Add validation rules for other attributes as needed
         ]);
 
         Project::create($request->all());
 
-        return redirect()->route('projects.index')
-            ->with('success', 'Project created successfully.');
+        return redirect()->route('projects.index')->with('success', 'Project created successfully.');
     }
 
     /**
@@ -84,7 +82,6 @@ class ProjectController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            // Add validation rules for other attributes as needed
         ]);
 
         $project->update($request->all());
@@ -105,29 +102,6 @@ class ProjectController extends Controller
 
         return redirect()->route('projects.index')
             ->with('success', 'Project deleted successfully.');
-    }
-
-    /**
-     * Attach a task to a project.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $projectId
-     * @return \Illuminate\Http\Response
-     */
-    public function attachTask(Request $request, $projectId)
-    {
-        $request->validate([
-            'task_id' => 'required|exists:tasks,id',
-        ]);
-
-        $project = Project::findOrFail($projectId);
-        $task = Task::findOrFail($request->input('task_id'));
-
-        // Attach the task to the project
-        $project->tasks()->attach($task);
-
-        return redirect()->route('projects.show', $projectId)
-            ->with('success', 'Task attached successfully.');
     }
 
     /**
@@ -160,5 +134,72 @@ class ProjectController extends Controller
         }
 
         return response()->json(['message' => 'Task order updated successfully']);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Product $project
+     * @return \Illuminate\Http\Response
+     */
+    public function archive($id)
+    {
+        $item = Product::withTrashed()->findOrFail($id);
+        $item->archive();
+
+        return response()->json([
+            'message' => "You have successfully archived {$item->renderName()}",
+        ]);
+    }
+
+    /**
+     * Restore the specified resource from storage.
+     *
+     * @param  \App\Project $project
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id)
+    {
+        $item = Product::withTrashed()->findOrFail($id);
+        $item->unarchive();
+
+        return response()->json([
+            'message' => "You have successfully restored {$item->renderName()}",
+        ]);
+    }
+
+    /**
+     * Custom formatting of data
+     * 
+     * @param Illuminate\Support\Collection $items
+     * @return array $result
+     */
+    protected function formatData($items)
+    {
+        $result = [];
+
+        foreach($items as $item) {
+            $data = $this->formatItem($item);
+            array_push($result, $data);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Build array data
+     * 
+     * @return array
+     */
+    protected function formatItem($item)
+    {
+        return [
+            'id' => $item->id,
+            'name' => $item->name,
+            'created_at' => $item->renderDate(),
+            'archiveUrl' => $item->renderArchiveUrl(),
+            'restoreUrl' => $item->renderRestoreUrl(),
+            'deleted_at' => $item->deleted_at,
+        ];
     }
 }

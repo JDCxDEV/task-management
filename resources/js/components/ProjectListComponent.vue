@@ -10,6 +10,7 @@
 				</select>
 			</div>
 			<div class="col-3">
+				<button class="btn btn btn-light"><i class="fas fa-cog"></i></button>
 				<button class="btn btn-success float-end">Add New Task</button>
 			</div>
 		</div>

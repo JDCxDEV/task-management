@@ -3,8 +3,9 @@
     <table class="table task-table">
       <thead>
         <tr>
+          <th scope="col">#</th>
           <th scope="col">Task Name</th>
-          <th scope="col">Priority</th>
+          <th scope="col">Action</th>
         </tr>
       </thead>
         <draggable
@@ -17,8 +18,18 @@
         >
           <template #item="{ element, index }">
             <tr class="task-item ">
-              <td>{{ element.name }}</td>
-              <td>{{ index + 1 }}</td>
+              	<td class="text-center">
+					{{ index + 1 }}
+				</td>
+              	<td>{{ element.name }}</td>
+				<td class="text-center">
+					<button class="btn btn-warning m-1 text-white">
+						<i class="fa-solid fa-pen-to-square"></i>
+					</button>
+					<button class="btn btn-danger">
+						<i class="fa-solid fa-trash"></i>
+					</button>
+				</td>
             </tr>
           </template>
         </draggable>
@@ -69,7 +80,7 @@ export default {
     };
 
     onMounted(fetchTasks);
-    
+
     watch(() => props.projectId, fetchTasks);
 
     return {
@@ -86,6 +97,7 @@ export default {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  border-radius: 20px;
 }
 
 .task-table th,
