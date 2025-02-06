@@ -32,6 +32,26 @@ class Project extends Model
         return $this->hasMany(Task::class);
     }
 
+
+    /*
+	|--------------------------------------------------------------------------
+	| @Getters
+	|--------------------------------------------------------------------------
+	*/
+    public static function getLastPriority($id)
+    {
+        $project = static::find($id);
+
+        if (!$project) {
+            return null;
+        }
+
+        $lastPriority = $project->tasks()->count();
+
+        return $lastPriority;
+    }
+
+
     /*
 	|--------------------------------------------------------------------------
 	| @Renders

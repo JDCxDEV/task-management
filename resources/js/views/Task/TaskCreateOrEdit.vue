@@ -24,9 +24,11 @@
 <script>
 import { ref, inject } from 'vue';
 import axios from 'axios';
-import Modal from '../../components/Modal.vue'; // Adjust the path as needed
+import Modal from '../../components/modal.vue'; 
 
 export default {
+    name: 'TaskCreateOrEdit',
+
     components: {
         Modal
     },
@@ -49,17 +51,15 @@ export default {
             default: null
         },
         taskId: {
-            type: String,
             default: null
         },
         modalId: {
             type: String,
             default: 'taskModal'
         },
-        class: {
-            type: String,
-            default: ''
-        },
+        projectId: {
+            default: null,
+        }
     },
 
     setup(props) {
@@ -71,6 +71,7 @@ export default {
 
         const openTaskModal = async () => {
             taskForm.value.openModal();
+            taskName.value = '';
 
             if (props.isEditing) {
                 await getTask(props.viewUrl);
@@ -95,8 +96,14 @@ export default {
                     await axios.put(updateUrl.value, { name: taskName.value });
                     await emitter.emit('task-create-or-update', props.taskId);
                 } else {
-                    await axios.post(props.createUrl, { name: taskName.value });
-                    await emitter.emit('task-create-or-update');
+                    if (props.projectId) {
+                        await axios.post(props.createUrl, {
+                            name: taskName.value,
+                            project_id: props.projectId
+                        });
+                        
+                        await emitter.emit('task-create-or-update');
+                    }
                 }
 
                 closeTaskModal();

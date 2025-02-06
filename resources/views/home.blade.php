@@ -20,7 +20,7 @@
                         </div>
                     @endif
                     
-                    <dashboard></dashboard>
+                    <dashboard task-create-url="{{ route('task.store') }}"></dashboard>
                 </div>
             </div>
         </div>

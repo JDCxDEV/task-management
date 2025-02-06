@@ -111,7 +111,7 @@ class ProjectController extends Controller
         $project = Project::findOrFail($projectId);
 
         foreach ($tasks as $index => $taskData) {
-            $project->tasks()->where('id', $taskData['id'])->update(['priority' => $index]);
+            $project->tasks()->where('id', $taskData['id'])->update(['priority' => $index + 1]);
         }
 
         return response()->json(['message' => 'Task order updated successfully']);

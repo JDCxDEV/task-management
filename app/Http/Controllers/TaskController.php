@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use App\Models\Task;
+
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -18,17 +20,6 @@ class TaskController extends Controller
     }
 
     /**
-     * Show the form for creating a new task.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        // You can pass any necessary data to the create view here
-        return view('tasks.create');
-    }
-
-    /**
      * Store a newly created task in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -38,13 +29,17 @@ class TaskController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'priority' => 'required|integer',
         ]);
 
-        Task::create($request->all());
+        $lastPriority = (int) Project::getLastPriority($request->project_id);
 
-        return redirect()->route('tasks.index')
-            ->with('success', 'Task created successfully.');
+        $task = Task::create([
+            'name' => $request->name,
+            'priority' => $lastPriority + 1,
+            'project_id' => $request->project_id,
+        ]);
+
+        return response()->json(['message' => $request->all()]);
     }
 
     /**

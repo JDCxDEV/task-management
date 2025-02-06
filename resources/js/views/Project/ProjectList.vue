@@ -24,13 +24,14 @@
                         <TaskCreateOrEdit 
                             modalId="taskCreate" 
                             :projectId="projectId"
+                            :createUrl="taskCreateUrl"
                         />
                     </div>
                 </div>
 			</div>
 		</div>
     </div>
-    <TaskList :projectId="projectId"></TaskList>
+    <TaskList :projectId="projectId" />
 </div>
 </template>
 
@@ -49,6 +50,13 @@ export default {
         TaskList,
         ProjectCreateOrEdit,
         TaskCreateOrEdit
+    },
+
+    props: {
+        taskCreateUrl: {
+            type: String,
+            default: ''
+        },
     },
   
     setup() {
