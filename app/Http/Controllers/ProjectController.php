@@ -50,6 +50,24 @@ class ProjectController extends Controller
     }
 
     /**
+     * Show the form for editing the specified project.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function view($id)
+    {
+        $project = Project::findOrFail($id);
+
+        return response()->json([
+            'id' => $project->id,
+            'name' => $project->name,
+            'updateUrl' =>$project->renderUpdateUrl()   
+        ]);
+    }
+
+
+    /**
      * Update the specified project in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -160,6 +178,7 @@ class ProjectController extends Controller
             'id' => $item->id,
             'name' => $item->name,
             'created_at' => $item->renderDate(),
+            'viewUrl' => $item->renderViewUrl(),
             'archiveUrl' => $item->renderArchiveUrl(),
             'restoreUrl' => $item->renderRestoreUrl(),
             'deleted_at' => $item->deleted_at,

@@ -46,7 +46,7 @@ export default {
   name: 'TaskList',
   props: {
     projectId: {
-      type: Number,
+      type: String,
       required: true,
     },
   },

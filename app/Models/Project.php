@@ -37,6 +37,19 @@ class Project extends Model
 	| @Renders
 	|--------------------------------------------------------------------------
 	*/
+
+    /*
+	|--------------------------------------------------------------------------
+	| @Renders
+	|--------------------------------------------------------------------------
+	*/
+    public function renderViewUrl() {
+        return route('project.view', $this->id);
+    }
+    public function renderUpdateUrl() {
+        return route('project.update', $this->id);
+    }
+
     public function renderArchiveUrl() {
         return route('project.archive', $this->id);
     }
