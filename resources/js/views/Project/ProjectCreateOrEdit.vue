@@ -2,8 +2,8 @@
   <div>
     <button :class="isEditing ? 'btn btn-primary' : 'btn btn-success'" @click="openModal">{{ !isEditing ? 'Create' : 'Edit' }} Project</button>
 
-    <Modal :id="modalId" title="Create new project" ref="projectForm">
-        <form @submit.prevent="handleSubmit">
+    <Modal :id="modalId" title="Create new project" ref="projectForm" @save="submit">
+        <form>
             <div class="mb-3">
                 <label for="projectName" class="form-label">Project Name</label>
                 <input type="text" class="form-control" id="projectName" v-model="projectName" required>
@@ -15,6 +15,8 @@
 
 <script>
 import { ref } from 'vue';
+import axios from 'axios';
+
 import Modal from '../../components/modal.vue';
 
 export default {
@@ -23,6 +25,14 @@ export default {
     },
 
     props: {
+        createUrl: {
+            type: String,
+            default: false
+        },
+        updateUrl: {
+            type: String,
+            default: false
+        },
         isEditing: {
             type: Boolean,
             default: false
@@ -34,32 +44,37 @@ export default {
     },
 
     setup(props) {
+
         const projectName = ref('');
         let projectForm = ref(null);
+
         const closeModal = () => {
-            showModal.value = false;
+            projectForm.value.closeModal();
         };
 
-        const handleSubmit = () => {
-            if (props.isEditing) {
-                console.log('Editing project name:', projectName.value);
-            } else {
-                console.log('Creating project with name:', projectName.value);
+        const submit = async () => {
+            try {
+                if (props.isEditing) {
+                    await axios.put(`/api/projects/${props.projectId}`, { projectName: projectName.value });
+                } else {
+                    await axios.post(props.createUrl, { name: projectName.value });
+                }
+                closeModal();
+            } catch (error) {
+                console.error('Error:', error);
             }
-            closeModal();
         };
 
         const openModal =  () => {
             projectForm.value.openModal();
         };
     
-
         return {
-            openModal,
+            projectForm,
             projectName,
-            closeModal,
-            handleSubmit,
-            projectForm
+            openModal,
+            closeModal,    
+            submit
         };
     }
 };

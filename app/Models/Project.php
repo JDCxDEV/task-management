@@ -14,6 +14,15 @@ class Project extends Model
     protected $dates = ['deleted_at'];
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+    ];
+
+    /**
      * Define a many-to-many relationship between projects and tasks.
      *
      * @return \Illuminate\Database\Eloquent\Relations\hasMany

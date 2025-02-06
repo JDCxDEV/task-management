@@ -6,7 +6,7 @@
         <div class="col-md-8">
             <div class="row">
                 <div class="col-md-12 pb-2">
-                    <project-create-or-delete />
+                    <project-create-or-delete create-url="{{ route('project.store') }}" />
                 </div>
             </div>
 
