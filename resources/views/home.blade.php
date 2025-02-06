@@ -6,7 +6,7 @@
         <div class="col-md-8">
             <div class="row">
                 <div class="col-md-12 pb-2">
-                    <button class="btn btn-success">Add New Project</button>
+                    <project-create-or-delete />
                 </div>
             </div>
 

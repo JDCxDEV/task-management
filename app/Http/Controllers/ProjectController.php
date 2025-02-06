@@ -33,17 +33,6 @@ class ProjectController extends Controller
     }
 
     /**
-     * Show the form for creating a new project.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        // You can pass any necessary data to the create view here
-        return view('projects.create');
-    }
-
-    /**
      * Store a newly created project in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -57,18 +46,7 @@ class ProjectController extends Controller
 
         Project::create($request->all());
 
-        return redirect()->route('projects.index')->with('success', 'Project created successfully.');
-    }
-
-    /**
-     * Show the form for editing the specified project.
-     *
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Project $project)
-    {
-        return view('projects.edit', compact('project'));
+        return response()->json(['message' => 'New Project created successfully']);
     }
 
     /**
@@ -86,22 +64,7 @@ class ProjectController extends Controller
 
         $project->update($request->all());
 
-        return redirect()->route('projects.index')
-            ->with('success', 'Project updated successfully.');
-    }
-
-    /**
-     * Remove the specified project from storage.
-     *
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Project $project)
-    {
-        $project->delete();
-
-        return redirect()->route('projects.index')
-            ->with('success', 'Project deleted successfully.');
+        return response()->json(['message' => 'Project updated successfully']);
     }
 
     /**

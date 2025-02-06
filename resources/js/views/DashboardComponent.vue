@@ -1,17 +1,17 @@
 <template>
   <div>
-      <ProjectComponent></ProjectComponent>
+      <ProjectList></ProjectList>
   </div>
 </template>
 
 <script>
-import ProjectComponent from './ProjectListComponent.vue';
+import ProjectList from './Project/ProjectList.vue';
 
 export default {
   name: 'DashboardComponent',
   
   components: {
-    ProjectComponent,
+    ProjectList,
   },
 };
 </script>

@@ -10,8 +10,13 @@
 				</select>
 			</div>
 			<div class="col-3">
-				<button class="btn btn btn-light"><i class="fas fa-cog"></i></button>
-				<button class="btn btn-success float-end">Add New Task</button>
+				<button class="btn btn btn-light">
+          <i class="fas fa-cog"></i>
+        </button>
+
+				<button class="btn btn-success float-end">
+          Add New Task
+        </button>
 			</div>
 		</div>
     </div>
@@ -22,14 +27,16 @@
 <script>
 import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
-import TaskListComponent from './TaskListComponent.vue';
+
+import TaskListComponent from '../Task/TaskList.vue';
 
 export default {
-  name: 'ProjectComponent',
+  name: 'ProjectList',
 
   components: {
     TaskListComponent,
   },
+  
   setup() {
     const projects = ref([]);
     const selectedTask = ref(null);
@@ -37,8 +44,10 @@ export default {
     const fetchProject = async () => {
       try {
         const response = await axios.get(`/projects/`);
+
         projects.value = response.data.projects;
-        selectedTask.value = projects.value[0].id;
+        selectedTask.value = projects.value ? projects.value[0].id : null;
+
       } catch (error) {
         console.error('Error fetching project:', error);
       }
