@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { ref, onMounted, watch } from 'vue';
+import { inject, ref, onMounted, watch } from 'vue';
 import axios from 'axios';
 
 import ProjectCreateOrEdit from '../Project/ProjectCreateOrEdit.vue';
@@ -38,15 +38,33 @@ export default {
     },
   
     setup() {
-        const projects = ref([]);
         const projectId = ref(null);
         const project = ref({});
+        const projects = ref([]);
 
-        const fetchProject = async () => {
+        const emitter = inject('emitter');
+
+
+        // *Listen* for event create or update
+        emitter.on('project-create-or-update', async (value) => {  
+            if (value) {
+                await fetchProject(value);
+            } else {
+                await fetchProject();
+            }
+        });
+        
+
+        const fetchProject = async (value = null) => {
             try {
                 const response = await axios.get(`/projects/`);
                 projects.value = response.data.projects;
-                projectId.value = projects.value ? projects.value[0].id : null;
+
+                if (value == null) {
+                    projectId.value = projects.value ? projects.value[0].id : null;
+                } else {
+                    projectId.value = value;
+                }
 
             } catch (error) {
                 console.error('Error fetching project:', error);

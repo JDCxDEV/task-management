@@ -1,13 +1,13 @@
 <template>
   <div>
     <table class="table task-table">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Task Name</th>
-          <th scope="col">Action</th>
-        </tr>
-      </thead>
+		<thead>
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">Task Name</th>
+				<th scope="col">Action</th>
+			</tr>
+		</thead>
         <draggable
           @start="drag = true"
           @end="reArrangeTaskOrder"
@@ -43,16 +43,19 @@ import axios from 'axios';
 import draggable from 'vuedraggable';
 
 export default {
-  name: 'TaskList',
-  props: {
-    projectId: {
-      type: String,
-      required: true,
-    },
-  },
-  components: {
-    draggable,
-  },
+	name: 'TaskList',
+	
+	props: {
+		projectId: {
+			type: String,
+			required: true,
+		},
+	},
+  
+	components: {
+		draggable,
+	},
+	
   setup(props) {
     const tasks = ref([]);
     const drag = ref(false);
@@ -69,14 +72,14 @@ export default {
     };
 
     const reArrangeTaskOrder = async () => {
-      try {
-        const response = await axios.put(`/projects/${props.projectId}/tasks/order`, { tasks: tasks.value });
-        if (!response.ok) {
-          throw new Error('Failed to update task order');
-        }
-      } catch (error) {
-        console.error('Error updating task order:', error);
-      }
+		try {
+			const response = await axios.put(`/projects/${props.projectId}/tasks/order`, { tasks: tasks.value });
+				if (!response.ok) {
+				throw new Error('Failed to update task order');
+			}
+		} catch (error) {
+			console.error('Error updating task order:', error);
+		}
     };
 
     onMounted(fetchTasks);

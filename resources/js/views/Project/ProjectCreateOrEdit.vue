@@ -1,12 +1,15 @@
 <template>
-  <div>
-    <button v-if="!iconClass" :class="isEditing ? 'btn btn-primary' : 'btn btn-success'" @click="openModal">
-        {{ !isEditing ? 'Create' : 'Edit' }} Project
-    </button>
+    <template v-if="!iconClass">
+            <button :class="isEditing ? 'btn btn-primary' : 'btn btn-success'" @click="openModal">
+            {{ !isEditing ? 'Create' : 'Edit' }} Project
+            </button>
+    </template>
 
-    <button v-else :class="isEditing ? 'btn btn-primary' : 'btn btn-success'" @click="openModal">
-       <i :class="iconClass"></i>
-    </button>
+    <template v-else>
+        <button :class="isEditing ? 'btn btn-primary' : 'btn btn-success'" @click="openModal">
+            <i :class="iconClass"></i>
+        </button>
+    </template>
 
     <Modal :id="modalId" :title="!isEditing ? 'Create new project' : 'Edit Project'" ref="projectForm" @save="submit">
         <form>
@@ -15,12 +18,11 @@
                 <input type="text" class="form-control" id="projectName" v-model="projectName" required>
             </div>
         </form>
-    </Modal >
-  </div>
+    </Modal>
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 import axios from 'axios';
 
 import Modal from '../../components/modal.vue';
@@ -60,14 +62,16 @@ export default {
     setup(props) {
 
         const projectName = ref('');
+        const emitter = inject('emitter');
+
         let updateUrl = ref('')
         let projectForm = ref(null);
 
-        const openModal =  () => {
+        const openModal =  async () => {
             projectForm.value.openModal();
 
             if (props.isEditing) {
-                getProject(props.viewUrl);
+                await getProject(props.viewUrl);
             }
         };
 
@@ -89,19 +93,19 @@ export default {
             try {
                 if (props.isEditing) {
                     await axios.put(updateUrl.value, { name: projectName.value });
+                    await emitter.emit('project-create-or-update', props.projectId);
                 } else {
                     await axios.post(props.createUrl, { name: projectName.value });
+                    await emitter.emit('project-create-or-update');
                 }
+
                 closeModal();
+  
             } catch (error) {
                 console.error('Error:', error);
             }
         };
 
-
-
-
-    
         return {
             projectForm,
             projectName,
@@ -112,7 +116,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-/* Optional: Add custom styles here */
-</style>
