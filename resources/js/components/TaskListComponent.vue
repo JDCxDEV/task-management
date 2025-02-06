@@ -9,14 +9,14 @@
       </thead>
         <draggable
           @start="drag = true"
-          @end="handleDragEnd"
+          @end="reArrangeTaskOrder"
           v-model="tasks"
           tag="tbody"
           :element="'tr'"
           :options="{ animation: 150 }"
         >
           <template #item="{ element, index }">
-            <tr >
+            <tr class="task-item ">
               <td>{{ element.name }}</td>
               <td>{{ index + 1 }}</td>
             </tr>
@@ -57,7 +57,7 @@ export default {
       }
     };
 
-    const handleDragEnd = async () => {
+    const reArrangeTaskOrder = async () => {
       try {
         const response = await axios.put(`/projects/${props.projectId}/tasks/order`, { tasks: tasks.value });
         if (!response.ok) {
@@ -69,12 +69,13 @@ export default {
     };
 
     onMounted(fetchTasks);
+    
     watch(() => props.projectId, fetchTasks);
 
     return {
       tasks,
       drag,
-      handleDragEnd,
+      reArrangeTaskOrder,
     };
   },
 };

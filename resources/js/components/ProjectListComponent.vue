@@ -1,13 +1,20 @@
 <template>
   <div>
     <div class="mb-4" v-if="projects.length">
-        <select v-model="selectedTask" class="form-select" >
-        <option v-for="project in projects" :key="project.id" :value="project.id">
-          {{ project.name }}
-        </option>
-      </select>
+		<div class="row">
+			<div class="col-9">
+				<select v-model="selectedTask" class="form-select" >
+					<option v-for="project in projects" :key="project.id" :value="project.id">
+					{{ project.name }}
+					</option>
+				</select>
+			</div>
+			<div class="col-3">
+				<button class="btn btn-success float-end">Add New Task</button>
+			</div>
+		</div>
     </div>
-        <TaskListComponent :projectId="selectedTask"></TaskListComponent>
+    <TaskListComponent :projectId="selectedTask"></TaskListComponent>
   </div>
 </template>
 
